@@ -1,0 +1,41 @@
+# =============================================================================
+# Dubbing Video Plus+ — Python Requirements
+# AI Video Dubbing, Speech Recognition, Vocal Separation & Voice Cloning
+# =============================================================================
+
+# Core Deep Learning & PyTorch (CUDA-accelerated or CPU)
+torch>=2.2.0
+torchaudio>=2.2.0
+
+# Speech-to-Text / ASR (Whisper)
+faster-whisper>=1.0.0
+ctranslate2>=4.0.0
+
+# Audio Separation (Demucs)
+demucs>=4.0.0
+
+# Text-to-Speech (TTS) Engines
+edge-tts>=6.1.0
+gTTS>=2.5.0
+
+# Translation Engines
+deep-translator>=1.11.0
+
+# Video & Audio Downloader (YouTube, TikTok, Douyin, Bilibili)
+yt-dlp>=2024.0.0
+
+# Audio Capture & Signal Processing
+sounddevice>=0.4.6
+soundfile>=0.12.1
+numpy>=1.24.0
+scipy>=1.10.0
+pydub>=0.25.1
+
+# AI Model Hub & Transformers
+huggingface-hub>=0.20.0
+transformers>=4.36.0
+
+# Networking & Utilities
+requests>=2.31.0
+tqdm>=4.66.0
+urllib3>=2.0.0
