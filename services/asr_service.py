@@ -7,7 +7,7 @@ selectable engines, Voice Activity Detection (VAD), word timestamps, and multi-l
 import os
 import shutil
 import logging
-from test_mini_tool.config import DETECTED_HF_CACHE
+from config import DETECTED_HF_CACHE
 
 logger = logging.getLogger("mini_dubber.asr")
 

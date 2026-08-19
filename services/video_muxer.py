@@ -16,8 +16,8 @@ import subprocess
 import logging
 import soundfile as sf
 import numpy as np
-from test_mini_tool.config import DEFAULT_BED_GAIN, DEFAULT_VOICE_GAIN, FFMPEG_PATH, FFPROBE_PATH
-from test_mini_tool.services.subtitle_export import export_srt
+from config import DEFAULT_BED_GAIN, DEFAULT_VOICE_GAIN, FFMPEG_PATH, FFPROBE_PATH
+from services.subtitle_export import export_srt
 
 logger = logging.getLogger("mini_dubber.muxer")
 

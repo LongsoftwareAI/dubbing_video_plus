@@ -12,8 +12,8 @@ for p in [CURRENT_DIR, ROOT_DIR]:
     if p not in sys.path:
         sys.path.insert(0, p)
 
-from test_mini_tool.config import CACHE_DIR
-from test_mini_tool.services.tts_service import synthesize_segment
+from config import CACHE_DIR
+from services.tts_service import synthesize_segment
 
 test_sentences = [
     "Xin chào các bạn, đây là thử nghiệm tối ưu hóa tốc độ.",

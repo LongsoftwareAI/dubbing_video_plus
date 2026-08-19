@@ -1,6 +1,6 @@
 import sys, os
 sys.path.insert(0, "d:/tool/omivoice")
-from test_mini_tool.core.settings_manager import load_settings
+from core.settings_manager import load_settings
 load_settings()
 
 cookie_path = os.environ.get("YOUTUBE_COOKIE_FILE", "")
@@ -16,7 +16,7 @@ if cookie_path and os.path.exists(cookie_path):
         print(f"  {line.rstrip()}")
 
 import yt_dlp
-from test_mini_tool.config import FFMPEG_PATH
+from config import FFMPEG_PATH
 
 url = "https://www.youtube.com/watch?v=EUKbVj2iiSE"
 

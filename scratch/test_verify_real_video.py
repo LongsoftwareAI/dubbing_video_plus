@@ -17,9 +17,9 @@ for p in [CURRENT_DIR, ROOT_DIR]:
     if p not in sys.path:
         sys.path.insert(0, p)
 
-from test_mini_tool.services.speaker_clone import extract_character_voice_reference, extract_all_speakers_references
-from test_mini_tool.services.tts_service import synthesize_segment, _estimate_pitch_and_gender
-from test_mini_tool.config import CACHE_DIR
+from services.speaker_clone import extract_character_voice_reference, extract_all_speakers_references
+from services.tts_service import synthesize_segment, _estimate_pitch_and_gender
+from config import CACHE_DIR
 
 def main():
     job_dir = os.path.join(CACHE_DIR, "job_wqOY7Y0w7pA")

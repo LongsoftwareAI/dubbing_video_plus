@@ -24,25 +24,25 @@ from datetime import datetime
 
 logger = logging.getLogger("mini_dubber.ui")
 
-from test_mini_tool.config import (
+from config import (
     DATA_DIR, DOWNLOADS_DIR, OUTPUT_DIR, CACHE_DIR, DEFAULT_TARGET_LANG, TIMING_STRATEGIES, VOICE_MATCH_MODES,
     TRANSLATE_QUALITY, EXPORT_VIDEO_FORMATS, EXPORT_AUDIO_FORMATS, EXPORT_SUBTITLE_FORMATS,
     ASR_ENGINES, ASR_MODELS
 )
-from test_mini_tool.ui.styles import apply_styles, DARK_THEME
-from test_mini_tool.core.model_loader import get_system_status
-from test_mini_tool.core.dub_engine import (
+from ui.styles import apply_styles, DARK_THEME
+from core.model_loader import get_system_status
+from core.dub_engine import (
     process_video_dubbing, prepare_segments_pipeline, render_video_from_segments
 )
-from test_mini_tool.core.batch_processor import BatchProcessor
-from test_mini_tool.core.settings_manager import load_settings, save_settings
-from test_mini_tool.services.subtitle_export import export_srt, export_vtt
-from test_mini_tool.services.translation_service import TRANSLATION_PROVIDERS, translate_segments
-from test_mini_tool.services.voice_catalog import get_voices_for_lang_code, preview_voice_sample, VOXDUB_PRESET_VOICES_VN
-from test_mini_tool.services.thumbnail_service import play_media_file
-from test_mini_tool.services.tts_service import synthesize_segment
-from test_mini_tool.services.voice_recorder import start_recording, stop_recording, is_recording
-from test_mini_tool.services.voice_clone_manager import (
+from core.batch_processor import BatchProcessor
+from core.settings_manager import load_settings, save_settings
+from services.subtitle_export import export_srt, export_vtt
+from services.translation_service import TRANSLATION_PROVIDERS, translate_segments
+from services.voice_catalog import get_voices_for_lang_code, preview_voice_sample, VOXDUB_PRESET_VOICES_VN
+from services.thumbnail_service import play_media_file
+from services.tts_service import synthesize_segment
+from services.voice_recorder import start_recording, stop_recording, is_recording
+from services.voice_clone_manager import (
     get_all_clone_profiles, create_clone_profile, delete_clone_profile,
     extract_voice_from_vocals, extract_all_speakers_from_job
 )
@@ -1200,7 +1200,7 @@ class MiniDubberApp:
 
     def _show_voxdub_translation_assistant(self):
         """Interactive Web AI Zero-Token & VoxDub Cách A Translation Assistant Dialog."""
-        from test_mini_tool.services.web_ai_translator import (
+        from services.web_ai_translator import (
             build_voxdub_prompt, parse_voxdub_llm_response, WebAIAutomationEngine
         )
 
@@ -2034,7 +2034,7 @@ class MiniDubberApp:
                 return
             vocal_wav = self.current_job_info["vocal_wav"]
             job_dir = self.current_job_info.get("job_dir", CACHE_DIR)
-            from test_mini_tool.services.speaker_clone import extract_all_speakers_references
+            from services.speaker_clone import extract_all_speakers_references
             extracted = extract_all_speakers_references(vocal_wav, self.current_segments, job_dir)
             if extracted:
                 for spk, data in extracted.items():

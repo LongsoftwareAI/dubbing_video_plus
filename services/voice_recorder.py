@@ -9,7 +9,7 @@ import logging
 import soundfile as sf
 import numpy as np
 
-from test_mini_tool.config import CACHE_DIR
+from config import CACHE_DIR
 
 logger = logging.getLogger("mini_dubber.recorder")
 

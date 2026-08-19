@@ -10,7 +10,7 @@ import subprocess
 import soundfile as sf
 import numpy as np
 
-from test_mini_tool.config import CACHE_DIR, FFMPEG_PATH
+from config import CACHE_DIR, FFMPEG_PATH
 
 logger = logging.getLogger("mini_dubber.voice_catalog")
 
@@ -87,7 +87,7 @@ def get_voices_for_lang_code(lang_code: str) -> list[str]:
     """Returns curated voice presets list for the requested language code, prepending custom Cloned Voices."""
     cloned_items = []
     try:
-        from test_mini_tool.services.voice_clone_manager import get_all_clone_profiles
+        from services.voice_clone_manager import get_all_clone_profiles
         for p in get_all_clone_profiles():
             cloned_items.append(f"[CLONE] {p['name']} ({p.get('gender', 'Nam')} - {p.get('dialect', 'Bắc')})")
     except Exception:
@@ -119,7 +119,7 @@ def preview_voice_sample(voice_name: str, sample_text: str = "Xin chào, đây l
     ref_audio = None
     if "[CLONE]" in voice_name:
         try:
-            from test_mini_tool.services.voice_clone_manager import get_all_clone_profiles
+            from services.voice_clone_manager import get_all_clone_profiles
             for p in get_all_clone_profiles():
                 if p["name"] in voice_name:
                     if p.get("ref_audio_path") and os.path.exists(p["ref_audio_path"]):
@@ -139,7 +139,7 @@ def preview_voice_sample(voice_name: str, sample_text: str = "Xin chào, đây l
     out_wav = os.path.join(CACHE_DIR, f"preview_{clean_voice}.wav")
 
     try:
-        from test_mini_tool.services.tts_service import synthesize_segment
+        from services.tts_service import synthesize_segment
         synthesize_segment(sample_text, out_wav, voice=voice_name, ref_audio_path=ref_audio)
 
         if os.path.exists(out_wav) and os.path.getsize(out_wav) > 100:

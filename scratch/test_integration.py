@@ -2,7 +2,7 @@
 import sys, os
 sys.path.insert(0, "d:/tool/omivoice")
 
-from test_mini_tool.config import CACHE_DIR
+from config import CACHE_DIR
 import threading
 
 test_dir = os.path.join(CACHE_DIR, "integration_test")
@@ -23,7 +23,7 @@ print(f"Exists: {os.path.exists(test_video)}")
 
 # Test 1: Demucs separation
 print("\n=== Test 1: Audio Separation (Demucs) ===")
-from test_mini_tool.services.audio_separator import separate_audio
+from services.audio_separator import separate_audio
 try:
     vocal, bed = separate_audio(test_video, test_dir)
     print(f"Vocal: {vocal} (exists={os.path.exists(vocal)}, size={os.path.getsize(vocal) if os.path.exists(vocal) else 0})")
@@ -34,7 +34,7 @@ except Exception as e:
 
 # Test 2: EdgeTTS from a thread (simulating Tkinter worker thread)
 print("\n=== Test 2: EdgeTTS from Thread ===")
-from test_mini_tool.services.tts_service import synthesize_segment
+from services.tts_service import synthesize_segment
 
 result = [None, None]
 

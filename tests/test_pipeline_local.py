@@ -6,11 +6,11 @@ import unittest
 import numpy as np
 import soundfile as sf
 
-from test_mini_tool.config import DETECTED_HF_CACHE, CACHE_DIR
-from test_mini_tool.core.model_loader import get_system_status
-from test_mini_tool.services.translation_service import translate_text, translate_segments
-from test_mini_tool.services.tts_service import synthesize_segment
-from test_mini_tool.services.video_muxer import assemble_dubbed_audio
+from config import DETECTED_HF_CACHE, CACHE_DIR
+from core.model_loader import get_system_status
+from services.translation_service import translate_text, translate_segments
+from services.tts_service import synthesize_segment
+from services.video_muxer import assemble_dubbed_audio
 
 class TestMiniDubber(unittest.TestCase):
     def test_system_status(self):

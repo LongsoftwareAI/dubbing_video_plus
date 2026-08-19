@@ -14,8 +14,8 @@ for p in [CURRENT_DIR, ROOT_DIR]:
         sys.path.insert(0, p)
 
 import json
-from test_mini_tool.config import CACHE_DIR
-from test_mini_tool.services.video_muxer import assemble_dubbed_audio, get_video_duration
+from config import CACHE_DIR
+from services.video_muxer import assemble_dubbed_audio, get_video_duration
 
 def test():
     job_dir = os.path.join(CACHE_DIR, "job_wqOY7Y0w7pA")

@@ -11,8 +11,8 @@ for p in [CURRENT_DIR, ROOT_DIR]:
     if p not in sys.path:
         sys.path.insert(0, p)
 
-from test_mini_tool.config import CACHE_DIR
-from test_mini_tool.services.tts_service import synthesize_segment
+from config import CACHE_DIR
+from services.tts_service import synthesize_segment
 
 def main():
     transcript_file = os.path.join(CACHE_DIR, 'job_wqOY7Y0w7pA', 'transcript_vi.json')

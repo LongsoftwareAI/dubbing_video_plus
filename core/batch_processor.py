@@ -8,8 +8,8 @@ import threading
 import logging
 from typing import Callable, Optional
 
-from test_mini_tool.config import OUTPUT_DIR, DEFAULT_TARGET_LANG
-from test_mini_tool.core.dub_engine import process_video_dubbing
+from config import OUTPUT_DIR, DEFAULT_TARGET_LANG
+from core.dub_engine import process_video_dubbing
 
 logger = logging.getLogger("mini_dubber.batch")
 

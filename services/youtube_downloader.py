@@ -10,7 +10,7 @@ import time
 import re
 import urllib.request
 import logging
-from test_mini_tool.config import DOWNLOADS_DIR, CACHE_DIR, FFMPEG_PATH
+from config import DOWNLOADS_DIR, CACHE_DIR, FFMPEG_PATH
 
 logger = logging.getLogger("mini_dubber.youtube")
 

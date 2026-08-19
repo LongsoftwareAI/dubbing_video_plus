@@ -4,7 +4,7 @@ Settings persistence — save/load user preferences and API Keys as JSON.
 import os
 import json
 import logging
-from test_mini_tool.config import SETTINGS_PATH
+from config import SETTINGS_PATH
 
 logger = logging.getLogger("mini_dubber.settings")
 

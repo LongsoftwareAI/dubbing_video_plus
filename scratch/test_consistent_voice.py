@@ -12,8 +12,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-from test_mini_tool.config import CACHE_DIR
-from test_mini_tool.services.tts_service import precompute_voice_prompt, synthesize_segment
+from config import CACHE_DIR
+from services.tts_service import precompute_voice_prompt, synthesize_segment
 
 ref_audio = os.path.join(CACHE_DIR, 'job_wqOY7Y0w7pA', 'auto_extracted_character_voice.wav')
 out_dir = os.path.join(CACHE_DIR, "test_consistent_voice")

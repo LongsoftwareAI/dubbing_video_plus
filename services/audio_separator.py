@@ -6,7 +6,7 @@ import os
 import sys
 import subprocess
 import logging
-from test_mini_tool.config import CACHE_DIR, FFMPEG_PATH
+from config import CACHE_DIR, FFMPEG_PATH
 
 logger = logging.getLogger("mini_dubber.audio_separator")
 

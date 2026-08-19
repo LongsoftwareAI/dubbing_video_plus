@@ -5,7 +5,7 @@ Directly inspects and reuses downloaded models and voice profiles from OmniVoice
 import os
 import sys
 import logging
-from test_mini_tool.config import DETECTED_HF_CACHE, OMNIVOICE_HF_CACHE
+from config import DETECTED_HF_CACHE, OMNIVOICE_HF_CACHE
 
 logger = logging.getLogger("mini_dubber.model_loader")
 

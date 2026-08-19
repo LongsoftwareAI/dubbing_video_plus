@@ -9,8 +9,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-from test_mini_tool.config import CACHE_DIR
-from test_mini_tool.services.video_muxer import assemble_dubbed_audio, get_video_duration
+from config import CACHE_DIR
+from services.video_muxer import assemble_dubbed_audio, get_video_duration
 
 JOB_DIR = os.path.join(CACHE_DIR, "job_wqOY7Y0w7pA")
 TRANSCRIPT_PATH = os.path.join(JOB_DIR, "transcript_vi.json")

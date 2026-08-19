@@ -17,9 +17,9 @@ for p in [CURRENT_DIR, ROOT_DIR]:
     if p not in sys.path:
         sys.path.insert(0, p)
 
-from test_mini_tool.config import CACHE_DIR, OUTPUT_DIR
-from test_mini_tool.core.dub_engine import render_video_from_segments
-from test_mini_tool.services.tts_service import synthesize_segment
+from config import CACHE_DIR, OUTPUT_DIR
+from core.dub_engine import render_video_from_segments
+from services.tts_service import synthesize_segment
 
 def test():
     job_dir = os.path.join(CACHE_DIR, "job_wqOY7Y0w7pA")

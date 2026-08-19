@@ -3,7 +3,7 @@ Test suite verifying YouTube video download functionality with real URLs.
 """
 import os
 import unittest
-from test_mini_tool.services.youtube_downloader import download_youtube_video
+from services.youtube_downloader import download_youtube_video
 
 class TestYouTubeDownloader(unittest.TestCase):
 

@@ -12,7 +12,7 @@ for p in [CURRENT_DIR, ROOT_DIR]:
     if p not in sys.path:
         sys.path.insert(0, p)
 
-from test_mini_tool.config import CACHE_DIR, OUTPUT_DIR
+from config import CACHE_DIR, OUTPUT_DIR
 
 def main():
     print("=== 1. ACTIVE PYTHON PROCESSES ===", flush=True)

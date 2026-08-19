@@ -16,7 +16,7 @@ if CURRENT_DIR not in sys.path:
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
-from test_mini_tool.ui.app_window import MiniDubberApp
+from ui.app_window import MiniDubberApp
 
 def main():
     root = tk.Tk()

@@ -3,7 +3,7 @@ Test OmniVoice bed_mix_filter string with FFmpeg.
 """
 import sys, os
 sys.path.insert(0, "d:/tool/omivoice")
-from test_mini_tool.config import FFMPEG_PATH
+from config import FFMPEG_PATH
 import subprocess
 
 ff = FFMPEG_PATH

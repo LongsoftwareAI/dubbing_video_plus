@@ -12,18 +12,18 @@ import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Dict, Any, List, Optional, Callable
 
-from test_mini_tool.config import (
+from config import (
     DOWNLOADS_DIR, CACHE_DIR, OUTPUT_DIR, DEFAULT_TARGET_LANG, DEFAULT_TTS_VOICE,
     DEFAULT_TTS_ENGINE, DEFAULT_BED_GAIN, DEFAULT_VOICE_GAIN
 )
-from test_mini_tool.services.youtube_downloader import download_youtube_video
-from test_mini_tool.services.audio_separator import separate_audio
-from test_mini_tool.services.asr_service import transcribe_audio
-from test_mini_tool.services.translation_service import translate_segments, generate_manual_translate_pending_file
-from test_mini_tool.services.speaker_clone import extract_character_voice_reference, extract_all_speakers_references
-from test_mini_tool.services.tts_service import synthesize_segment
-from test_mini_tool.services.quality_auditor import analyze_dubbing_quality
-from test_mini_tool.services.video_muxer import assemble_dubbed_audio, mix_and_mux_video, get_video_duration
+from services.youtube_downloader import download_youtube_video
+from services.audio_separator import separate_audio
+from services.asr_service import transcribe_audio
+from services.translation_service import translate_segments, generate_manual_translate_pending_file
+from services.speaker_clone import extract_character_voice_reference, extract_all_speakers_references
+from services.tts_service import synthesize_segment
+from services.quality_auditor import analyze_dubbing_quality
+from services.video_muxer import assemble_dubbed_audio, mix_and_mux_video, get_video_duration
 
 logger = logging.getLogger("mini_dubber.engine")
 
@@ -241,7 +241,7 @@ def render_video_from_segments(
     # This encodes the speaker's identity (timbre, pitch, style) into reusable
     # audio tokens. Every segment then reuses the EXACT SAME prompt, guaranteeing
     # 100% identical voice with zero variation across all 155+ segments.
-    from test_mini_tool.services.tts_service import precompute_voice_prompt, clear_voice_prompts_cache
+    from services.tts_service import precompute_voice_prompt, clear_voice_prompts_cache
     clear_voice_prompts_cache()
     if primary_ref and os.path.exists(str(primary_ref)):
         log_progress(64.0, "Pre-computing clean voice identity prompt (one-time)...")

@@ -23,7 +23,7 @@ import numpy as np
 os.environ.setdefault("TORCHAUDIO_USE_TORCHCODEC", "0")
 sys.modules.setdefault("torchcodec", None)
 
-from test_mini_tool.config import FFMPEG_PATH
+from config import FFMPEG_PATH
 
 logger = logging.getLogger("mini_dubber.tts")
 

@@ -12,12 +12,12 @@ for p in [CURRENT_DIR, ROOT_DIR]:
     if p not in sys.path:
         sys.path.insert(0, p)
 
-from test_mini_tool.services.youtube_downloader import download_youtube_video
-from test_mini_tool.services.audio_separator import separate_audio
-from test_mini_tool.services.asr_service import transcribe_audio
-from test_mini_tool.services.speaker_clone import extract_character_voice_reference, extract_all_speakers_references
-from test_mini_tool.services.tts_service import synthesize_segment, _estimate_pitch_and_gender
-from test_mini_tool.config import CACHE_DIR
+from services.youtube_downloader import download_youtube_video
+from services.audio_separator import separate_audio
+from services.asr_service import transcribe_audio
+from services.speaker_clone import extract_character_voice_reference, extract_all_speakers_references
+from services.tts_service import synthesize_segment, _estimate_pitch_and_gender
+from config import CACHE_DIR
 
 def run_test():
     url = "https://www.youtube.com/watch?v=wqOY7Y0w7pA"

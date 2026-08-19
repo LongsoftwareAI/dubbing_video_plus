@@ -8,17 +8,17 @@ import unittest
 import numpy as np
 import soundfile as sf
 
-from test_mini_tool.config import CACHE_DIR, OUTPUT_DIR, FFMPEG_PATH, FFPROBE_PATH
-from test_mini_tool.core.settings_manager import load_settings, save_settings
-from test_mini_tool.services.voice_catalog import get_voices_for_lang_code, preview_voice_sample
-from test_mini_tool.services.translation_service import translate_text, translate_segments
-from test_mini_tool.services.speaker_clone import extract_character_voice_reference
-from test_mini_tool.services.subtitle_export import export_srt, export_vtt
-from test_mini_tool.services.thumbnail_service import extract_video_thumbnail
-from test_mini_tool.services.video_muxer import assemble_dubbed_audio, mix_and_mux_video, get_video_duration
-from test_mini_tool.services.tts_service import synthesize_segment
-from test_mini_tool.core.model_loader import get_system_status
-from test_mini_tool.core.batch_processor import BatchProcessor
+from config import CACHE_DIR, OUTPUT_DIR, FFMPEG_PATH, FFPROBE_PATH
+from core.settings_manager import load_settings, save_settings
+from services.voice_catalog import get_voices_for_lang_code, preview_voice_sample
+from services.translation_service import translate_text, translate_segments
+from services.speaker_clone import extract_character_voice_reference
+from services.subtitle_export import export_srt, export_vtt
+from services.thumbnail_service import extract_video_thumbnail
+from services.video_muxer import assemble_dubbed_audio, mix_and_mux_video, get_video_duration
+from services.tts_service import synthesize_segment
+from core.model_loader import get_system_status
+from core.batch_processor import BatchProcessor
 
 
 class TestAllMiniDubberFunctions(unittest.TestCase):

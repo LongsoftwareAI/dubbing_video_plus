@@ -12,7 +12,7 @@ import subprocess
 import soundfile as sf
 import numpy as np
 
-from test_mini_tool.config import DATA_DIR, FFMPEG_PATH
+from config import DATA_DIR, FFMPEG_PATH
 
 logger = logging.getLogger("mini_dubber.voice_clone")
 
