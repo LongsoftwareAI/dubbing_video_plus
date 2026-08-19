@@ -207,10 +207,33 @@ class WebAIAutomationEngine:
 
     @classmethod
     def open_web_ai(cls, target: str = "gemini") -> str:
-        """Opens the selected Web AI in user's default browser."""
+        """
+        Opens the selected Web AI in Google Chrome or default browser for visual observation.
+        """
         target_key = target.lower()
         info = cls.SUPPORTED_TARGETS.get(target_key, cls.SUPPORTED_TARGETS["gemini"])
-        webbrowser.open(info["url"])
+        url = info["url"]
+
+        # Check for Google Chrome executable on Windows
+        chrome_paths = [
+            r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+            r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+            os.path.expanduser(r"~\AppData\Local\Google\Chrome\Application\chrome.exe"),
+            r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+            r"C:\Program Files\Microsoft\Edge\Application\msedge.exe"
+        ]
+        chrome_exe = next((p for p in chrome_paths if os.path.exists(p)), None)
+
+        if chrome_exe:
+            try:
+                import subprocess
+                subprocess.Popen([chrome_exe, url])
+                logger.info(f"Launched browser window ({chrome_exe}) for {info['name']}: {url}")
+                return info["name"]
+            except Exception as e:
+                logger.warning(f"Failed to launch specific browser ({e}), using default...")
+
+        webbrowser.open(url)
         return info["name"]
 
 
