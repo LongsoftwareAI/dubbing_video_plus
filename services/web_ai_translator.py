@@ -116,19 +116,29 @@ def parse_voxdub_llm_response(raw_text: str, original_segments: List[Dict]) -> L
 
     # Reconstruct segments list
     updated_segments = []
+    # Check if id_to_translated uses 1-based indexing while segments use 0-based
+    keys = list(id_to_translated.keys())
+    is_1_based = bool(keys and min(keys) == 1 and 0 not in id_to_translated and any(s.get("id") == 0 for s in original_segments))
+
     for idx, seg in enumerate(original_segments):
         new_seg = dict(seg)
         orig = seg.get("text_original") or seg.get("text") or ""
         new_seg["text_original"] = orig
-        
+
         seg_id = seg.get("id", idx)
-        if seg_id in id_to_translated:
+        lookup_id = (seg_id + 1) if (is_1_based and seg_id in range(len(original_segments))) else seg_id
+        
+        if lookup_id in id_to_translated:
+            new_seg["text"] = id_to_translated[lookup_id]
+        elif seg_id in id_to_translated:
             new_seg["text"] = id_to_translated[seg_id]
+        elif (idx + 1) in id_to_translated and is_1_based:
+            new_seg["text"] = id_to_translated[idx + 1]
         elif idx in id_to_translated:
             new_seg["text"] = id_to_translated[idx]
         else:
             new_seg["text"] = orig
-            
+
         updated_segments.append(new_seg)
 
     match_count = sum(1 for s in updated_segments if s.get("text") != s.get("text_original"))
