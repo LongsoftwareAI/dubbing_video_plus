@@ -1,17 +1,20 @@
 # =============================================================================
 # Dubbing Video Plus+ — Python Requirements
 # AI Video Dubbing, Speech Recognition, Vocal Separation & Voice Cloning
+#
+# For NVIDIA GPU Acceleration (CUDA), install PyTorch first via:
+# pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu124
 # =============================================================================
 
-# Core Deep Learning & PyTorch (CUDA-accelerated or CPU)
+# Core Deep Learning & PyTorch (CUDA-accelerated)
 torch>=2.2.0
 torchaudio>=2.2.0
 
-# Speech-to-Text / ASR (Whisper)
+# Speech-to-Text / ASR (Whisper with CTranslate2 CUDA float16 acceleration)
 faster-whisper>=1.0.0
 ctranslate2>=4.0.0
 
-# Audio Separation (Demucs)
+# Audio Separation (Demucs with PyTorch CUDA)
 demucs>=4.0.0
 
 # Text-to-Speech (TTS) Engines
