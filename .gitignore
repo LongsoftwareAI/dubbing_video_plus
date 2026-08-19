@@ -1,0 +1,70 @@
+# =============================================================================
+# Gitignore for Dubbing Video Plus+ (MiniDubber Desktop App)
+# =============================================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Workspace Dynamic Data (Media, Stems & Temporary Cache)
+workspace/cache/*
+!workspace/cache/.gitkeep
+workspace/downloads/*
+!workspace/downloads/.gitkeep
+workspace/outputs/*
+!workspace/outputs/.gitkeep
+
+# Large Media & Binary Files
+*.mp4
+*.mkv
+*.mov
+*.avi
+*.webm
+*.wav
+*.mp3
+*.aac
+*.flac
+*.m4a
+
+# Model Weights & Checkpoints (downloaded on-demand via HF / Hub)
+*.pt
+*.pth
+*.bin
+*.onnx
+*.safetensors
+*.ckpt
+checkpoints/
+weights/
+hf_cache/
+
+# User Settings / API Keys & Logs (Keep default_settings clean)
+*.log
+logs/
+.env
+api_keys.json
+
+# IDE / Editor Files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Operating System Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+.Spotlight-V100
+.Trashes

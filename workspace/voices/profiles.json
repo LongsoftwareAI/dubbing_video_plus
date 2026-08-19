@@ -1,0 +1,20 @@
+[
+  {
+    "id": "clone_viet_bac_nu",
+    "name": "Thanh Trúc (Nữ Hà Nội - Truyền cảm)",
+    "gender": "Nữ",
+    "dialect": "Miền Bắc",
+    "ref_audio_path": "",
+    "description": "Giọng nữ thanh lịch, chuẩn phát âm Hà Nội, phù hợp đọc sách và tin tức",
+    "created_at": "2026-08-19 21:57"
+  },
+  {
+    "id": "clone_viet_nam_nam",
+    "name": "Hoàng Nam (Nam Sài Gòn - Trầm ấm)",
+    "gender": "Nam",
+    "dialect": "Miền Nam",
+    "ref_audio_path": "",
+    "description": "Giọng nam miền Nam tự nhiên, phong cách Vlog và Review công nghệ",
+    "created_at": "2026-08-19 21:57"
+  }
+]
