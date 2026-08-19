@@ -1236,14 +1236,53 @@ class MiniDubberApp:
             f_top, text="🤖 Dịch Thuật Tự Động Web AI Zero-Token (Phong Cách VoxDub Cách A)",
             bg=DARK_THEME["bg_window"], fg="#818CF8", font=("Segoe UI", 13, "bold")
         ).pack(anchor="w")
-        tk.Label(
-            f_top,
-            text="Tự động tạo prompt kịch bản tối ưu lồng tiếng phim, gửi trực tiếp lên Gemini / ChatGPT / DeepSeek Web miễn phí và nạp lại kết quả 1-click!",
-            bg=DARK_THEME["bg_window"], fg=DARK_THEME["fg_subtext"], font=("Segoe UI", 9)
-        ).pack(anchor="w", pady=(2, 0))
+        # Top Banner & 1-Click Auto Chrome Bot Actions
+        f_bot_banner = ttk.Frame(dlg, padding=(16, 4))
+        f_bot_banner.pack(fill="x")
+
+        lbl_bot_status = tk.Label(
+            f_bot_banner,
+            text="⚡ Chế độ tự động hoàn toàn: Chrome Bot sẽ tự bật lên, tự dán kịch bản và tự lấy kết quả dịch về app!",
+            bg=DARK_THEME["bg_window"], fg="#10B981", font=("Segoe UI", 9, "bold")
+        )
+        lbl_bot_status.pack(side="left")
+
+        def _run_auto_bot(target_bot):
+            lbl_bot_status.config(text=f"⏳ Đang kích hoạt Chrome Bot ({target_bot.upper()})... Vui lòng theo dõi cửa sổ Chrome.", fg="#F59E0B")
+            def _worker():
+                try:
+                    def _prog(m):
+                        dlg.after(0, lambda msg=m: lbl_bot_status.config(text=msg))
+                    res_segs = WebAIAutomationEngine.run_auto_chrome_bot(
+                        segments, target=target_bot, target_lang="vi", style="cinematic", progress_cb=_prog
+                    )
+                    def _on_done():
+                        self.current_segments = res_segs
+                        if self.current_job_info:
+                            self.current_job_info["segments"] = res_segs
+                            job_dir = self.current_job_info.get("job_dir")
+                            if job_dir and os.path.exists(job_dir):
+                                with open(os.path.join(job_dir, "transcript_vi.json"), "w", encoding="utf-8") as f:
+                                    json.dump(res_segs, f, ensure_ascii=False, indent=2)
+                        self._populate_segments_table(res_segs)
+                        dlg.destroy()
+                        self._show_editor_view()
+                        messagebox.showinfo("Thành Công!", f"🎉 Đã dịch tự động 100% qua Chrome Bot ({len(res_segs)} câu) và nạp vào dự án!")
+                    dlg.after(0, _on_done)
+                except Exception as ex:
+                    dlg.after(0, lambda err=ex: (
+                        lbl_bot_status.config(text=f"Lỗi: {err}", fg="#EF4444"),
+                        messagebox.showerror("Lỗi Chrome Bot", str(err), parent=dlg)
+                    ))
+            threading.Thread(target=_worker, daemon=True).start()
+
+        btn_auto_chatgpt = ttk.Button(f_bot_banner, text="⚡ TỰ ĐỘNG CHATGPT BOT", command=lambda: _run_auto_bot("chatgpt"))
+        btn_auto_chatgpt.pack(side="right", padx=3)
+        btn_auto_gemini = ttk.Button(f_bot_banner, text="⚡ TỰ ĐỘNG GEMINI BOT", command=lambda: _run_auto_bot("gemini"))
+        btn_auto_gemini.pack(side="right", padx=3)
 
         # Main Paned Area
-        f_panes = ttk.Frame(dlg, padding=(16, 0))
+        f_panes = ttk.Frame(dlg, padding=(16, 4))
         f_panes.pack(fill="both", expand=True)
         f_panes.columnconfigure(0, weight=5)
         f_panes.columnconfigure(1, weight=5)

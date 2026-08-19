@@ -38,6 +38,10 @@ pydub>=0.25.1
 huggingface-hub>=0.20.0
 transformers>=4.36.0
 
+# Web AI Zero-Token Automation (Chrome Bot)
+selenium>=4.20.0
+webdriver-manager>=4.0.0
+
 # Networking & Utilities
 requests>=2.31.0
 tqdm>=4.66.0

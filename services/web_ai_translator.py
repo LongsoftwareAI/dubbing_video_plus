@@ -214,7 +214,6 @@ class WebAIAutomationEngine:
         info = cls.SUPPORTED_TARGETS.get(target_key, cls.SUPPORTED_TARGETS["gemini"])
         url = info["url"]
 
-        # Check for Google Chrome executable on Windows
         chrome_paths = [
             r"C:\Program Files\Google\Chrome\Application\chrome.exe",
             r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
@@ -235,6 +234,218 @@ class WebAIAutomationEngine:
 
         webbrowser.open(url)
         return info["name"]
+
+    @classmethod
+    def run_auto_chrome_bot(
+        cls,
+        segments: List[Dict],
+        target: str = "chatgpt",
+        target_lang: str = "vi",
+        style: str = "cinematic",
+        progress_cb: Optional[Callable[[str], None]] = None
+    ) -> List[Dict]:
+        """
+        Launches an automated visible Chrome browser, pastes the prompt into ChatGPT / Gemini / DeepSeek,
+        waits for response streaming to complete, and extracts the translated segments automatically.
+        """
+        def _log(msg: str):
+            logger.info(f"[ChromeBot] {msg}")
+            if progress_cb:
+                progress_cb(msg)
+
+        _log("Đang tạo kịch bản prompt chuẩn VoxDub Cách A...")
+        prompt = build_voxdub_prompt(segments, target_lang=target_lang, style=style)
+        cls.copy_prompt_to_clipboard(prompt)
+
+        target_key = target.lower()
+        info = cls.SUPPORTED_TARGETS.get(target_key, cls.SUPPORTED_TARGETS["chatgpt"])
+        url = info["url"]
+
+        _log(f"Đang khởi tạo cửa sổ Google Chrome ({info['name']})...")
+
+        try:
+            from selenium import webdriver
+            from selenium.webdriver.chrome.options import Options
+            from selenium.webdriver.common.by import By
+            from selenium.webdriver.common.keys import Keys
+            from selenium.webdriver.support.ui import WebDriverWait
+            from selenium.webdriver.support import expected_conditions as EC
+        except ImportError as e:
+            raise RuntimeError(f"Chưa cài đặt Selenium: {e}. Vui lòng chạy: pip install selenium")
+
+        chrome_profile = os.path.expanduser(r"~\AppData\Local\DubbingVideoPlus\chrome_bot_profile")
+        os.makedirs(chrome_profile, exist_ok=True)
+
+        options = Options()
+        options.add_argument(f"--user-data-dir={chrome_profile}")
+        options.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option("useAutomationExtension", False)
+        options.add_argument("--start-maximized")
+
+        driver = None
+        try:
+            driver = webdriver.Chrome(options=options)
+            _log(f"Đang truy cập trang web: {url}...")
+            driver.get(url)
+            time.sleep(3)
+
+            # 1. Locate Chat Input Box
+            _log("Đang tìm ô nhập kịch bản trên trang web...")
+            input_box = None
+
+            # Try different selector strategies based on target
+            selectors = [
+                (By.ID, "prompt-textarea"),
+                (By.CSS_SELECTOR, "div[contenteditable='true']"),
+                (By.CSS_SELECTOR, "textarea[data-testid='prompt-textarea']"),
+                (By.CSS_SELECTOR, "rich-textarea p"),
+                (By.CSS_SELECTOR, "rich-textarea div"),
+                (By.TAG_NAME, "textarea"),
+                (By.CSS_SELECTOR, "div[role='textbox']"),
+                (By.CSS_SELECTOR, "#chat-input"),
+            ]
+
+            start_wait = time.time()
+            while time.time() - start_wait < 25:
+                for by_type, sel in selectors:
+                    try:
+                        elems = driver.find_elements(by_type, sel)
+                        for el in elems:
+                            if el.is_displayed():
+                                input_box = el
+                                break
+                        if input_box: break
+                    except Exception: pass
+                if input_box: break
+                time.sleep(1)
+
+            if not input_box:
+                _log("⚠️ Không tìm thấy ô chat tự động (Có thể cần đăng nhập). Vui lòng nhấn vào ô chat và ấn Ctrl+V.")
+                time.sleep(10)
+                # Retry search
+                for by_type, sel in selectors:
+                    try:
+                        elems = driver.find_elements(by_type, sel)
+                        for el in elems:
+                            if el.is_displayed():
+                                input_box = el; break
+                        if input_box: break
+                    except Exception: pass
+
+            if input_box:
+                _log("✓ Đã tìm thấy ô chat! Đang dán kịch bản vào...")
+                try:
+                    input_box.click()
+                    time.sleep(0.5)
+                    # Paste via Clipboard for speed
+                    input_box.send_keys(Keys.CONTROL, "v")
+                    time.sleep(1)
+                except Exception:
+                    # Fallback to JavaScript injection
+                    driver.execute_script("arguments[0].innerText = arguments[1]; arguments[0].dispatchEvent(new Event('input', { bubbles: true }));", input_box, prompt)
+                    time.sleep(1)
+
+                # 2. Click Send Button
+                _log("Đang gửi kịch bản lên AI...")
+                send_selectors = [
+                    "button[data-testid='send-button']",
+                    "button[aria-label*='Send']",
+                    "button[aria-label*='Gửi']",
+                    ".send-button",
+                    "button[data-testid='fruitjuice-send-button']",
+                    "button.mb-1",
+                    "button[type='submit']"
+                ]
+                sent = False
+                for s_sel in send_selectors:
+                    try:
+                        btns = driver.find_elements(By.CSS_SELECTOR, s_sel)
+                        for b in btns:
+                            if b.is_displayed() and b.is_enabled():
+                                b.click()
+                                sent = True
+                                break
+                        if sent: break
+                    except Exception: pass
+
+                if not sent:
+                    try:
+                        input_box.send_keys(Keys.ENTER)
+                        sent = True
+                    except Exception: pass
+
+                _log("✓ Đã gửi thành công! Đang quan sát AI dịch kịch bản...")
+            else:
+                _log("Vui lòng ấn Ctrl+V vào ô chat trên Chrome và gửi.")
+
+            # 3. Wait for AI response to finish
+            _log("Đang theo dõi AI tạo bản dịch thời gian thực...")
+            raw_response = ""
+            time.sleep(5)
+
+            poll_start = time.time()
+            last_len = 0
+            stable_count = 0
+
+            while time.time() - poll_start < 150:
+                time.sleep(2)
+                # Check for assistant messages
+                msg_selectors = [
+                    "div[data-message-author-role='assistant']",
+                    "message-content",
+                    ".model-response-text",
+                    ".markdown",
+                    "div.agent-turn",
+                    "div.ds-markdown"
+                ]
+                found_text = ""
+                for m_sel in msg_selectors:
+                    try:
+                        msgs = driver.find_elements(By.CSS_SELECTOR, m_sel)
+                        if msgs:
+                            found_text = msgs[-1].text.strip()
+                            if found_text: break
+                    except Exception: pass
+
+                # Check if stop button is gone
+                stop_btns = driver.find_elements(By.CSS_SELECTOR, "button[data-testid='stop-button'], .stop-button")
+                is_generating = any(b.is_displayed() for b in stop_btns)
+
+                if found_text:
+                    cur_len = len(found_text)
+                    if cur_len == last_len and cur_len > 50 and not is_generating:
+                        stable_count += 1
+                        if stable_count >= 2:
+                            raw_response = found_text
+                            _log(f"✓ AI đã dịch xong hoàn tất ({len(raw_response)} ký tự)!")
+                            break
+                    else:
+                        stable_count = 0
+                        last_len = cur_len
+                        _log(f"AI đang viết câu dịch... ({cur_len} ký tự)")
+
+            if not raw_response:
+                # Last resort grab
+                for m_sel in msg_selectors:
+                    try:
+                        msgs = driver.find_elements(By.CSS_SELECTOR, m_sel)
+                        if msgs:
+                            raw_response = msgs[-1].text.strip()
+                            if raw_response: break
+                    except Exception: pass
+
+            if not raw_response:
+                raise TimeoutError("Hết thời gian chờ AI phản hồi hoặc chưa nhận được kết quả.")
+
+            _log("Đang phân tích và nạp kịch bản vào ứng dụng...")
+            parsed = parse_voxdub_llm_response(raw_response, segments)
+            _log(f"🎉 Hoàn thành! Đã nạp thành công {len(parsed)} câu thoại dịch vào dự án.")
+            return parsed
+
+        finally:
+            # Leave driver open or quit safely
+            pass
 
 
 # ─── 3. ASYNC TRANSLATION WORKER (ISOLATED THREAD) ───────────────────────────
