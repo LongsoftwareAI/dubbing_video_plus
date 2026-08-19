@@ -117,7 +117,7 @@ class MiniDubberApp:
         self.sub_color_var = tk.StringVar(value="Vàng Điện Ảnh (&H00FFFF)")
         self.sub_size_var = tk.StringVar(value="18pt (Chuẩn)")
         self.sub_pos_var = tk.StringVar(value="Dưới Cùng (Bottom)")
-        self.trans_engine_var = tk.StringVar(value="google")
+        self.trans_engine_var = tk.StringVar(value=TRANSLATION_PROVIDERS.get("web_ai_gemini", "🌐 Web AI Gemini (Zero-Token Free)"))
         self.trans_style_var = tk.StringVar(value="Cinematic (Điện ảnh, tự nhiên)")
         self.trans_quality_var = tk.StringVar(value="cinematic")
         self.output_dir_var = tk.StringVar(value=OUTPUT_DIR)
@@ -709,16 +709,18 @@ class MiniDubberApp:
         ttk.Combobox(f_s2_row, textvariable=self.asr_model_var, values=ASR_MODELS, state="readonly", width=10).pack(side="left", padx=2)
 
         # Step 3: Translation Engine & Target Language
-        f_step3 = ttk.LabelFrame(f_right_card, text=" Bước 3: Công cụ Dịch Thuật ", padding=6)
+        f_step3 = ttk.LabelFrame(f_right_card, text=" Bước 3: Công Cụ Dịch Thuật AI & Web AI Zero-Token ", padding=6)
         f_step3.pack(fill="x", pady=3)
 
         f_s3_row = ttk.Frame(f_step3)
         f_s3_row.pack(fill="x")
         ttk.Label(f_s3_row, text="Dịch bằng:", style="CardSub.TLabel").pack(side="left", padx=2)
-        ttk.Combobox(f_s3_row, textvariable=self.trans_engine_var, values=list(TRANSLATION_PROVIDERS.keys()), state="readonly", width=18).pack(side="left", padx=4)
+        ttk.Combobox(f_s3_row, textvariable=self.trans_engine_var, values=list(TRANSLATION_PROVIDERS.values()), state="readonly", width=28).pack(side="left", padx=4)
 
         ttk.Label(f_s3_row, text="Đích:", style="CardSub.TLabel").pack(side="left", padx=2)
-        ttk.Combobox(f_s3_row, textvariable=self.lang_var, values=list(LANGUAGES.keys()), state="readonly", width=22).pack(side="left", padx=2)
+        ttk.Combobox(f_s3_row, textvariable=self.lang_var, values=list(LANGUAGES.keys()), state="readonly", width=18).pack(side="left", padx=2)
+
+        ttk.Button(f_s3_row, text="🤖 Mở Trợ Lý Web AI", style="Secondary.TButton", command=self._show_voxdub_translation_assistant).pack(side="right", padx=2)
 
         # Step 4: AI Voice & Subtitles with Direct Auto-Clone Option
         f_step4 = ttk.LabelFrame(f_right_card, text=" Bước 4: Giọng Đọc AI & Phụ Đề ", padding=6)
@@ -1198,6 +1200,13 @@ class MiniDubberApp:
         if sel:
             self.tree_glossary.delete(sel[0])
 
+    def _get_selected_trans_engine_key(self):
+        val = self.trans_engine_var.get().strip()
+        for k, v in TRANSLATION_PROVIDERS.items():
+            if val == v or val == k:
+                return k
+        return "web_ai_gemini"
+
     def _show_voxdub_translation_assistant(self):
         """Interactive Web AI Zero-Token & VoxDub Cách A Translation Assistant Dialog."""
         from services.web_ai_translator import (
@@ -1618,7 +1627,7 @@ class MiniDubberApp:
         ref_audio = self.ref_voice_var.get().strip() or None
         auto_clone = self.auto_clone_var.get() or ("[CLONE" in voice)
         out_dir = self.output_dir_var.get()
-        trans_engine = self.trans_engine_var.get()
+        trans_engine = self._get_selected_trans_engine_key()
         burn_sub = self.burn_subs_var.get()
         dual_sub = self.dual_subs_var.get()
         mask_sub = self.mask_subs_var.get()

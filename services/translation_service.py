@@ -8,19 +8,44 @@ import os
 logger = logging.getLogger("mini_dubber.translation")
 
 TRANSLATION_PROVIDERS = {
-    "google": "Google Translate (Online, Free)",
-    "argos": "Argos Translate (Local, Offline)",
-    "nllb": "NLLB-200 Meta (Local, 200 Languages)",
-    "deepl": "DeepL (Online API Key)",
-    "microsoft": "Microsoft Translator (Online API Key)",
-    "mymemory": "MyMemory (Online, Free)",
+    "web_ai_gemini": "🌐 Web AI Gemini (Zero-Token Free)",
+    "web_ai_chatgpt": "🤖 Web AI ChatGPT (Zero-Token Free)",
+    "web_ai_deepseek": "✨ Web AI DeepSeek (Zero-Token Free)",
+    "voxdub_batch": "📋 VoxDub Cách A (Kịch bản Batch)",
+    "google": "Google Translate (Online, Miễn phí)",
+    "deepl": "DeepL Translate (Online API Key)",
     "openai": "LLM / Ollama (OpenAI-compatible)",
+    "nllb": "NLLB-200 Meta (Local, 200 Languages)",
+    "argos": "Argos Translate (Local, Offline)",
+    "microsoft": "Microsoft Translator (Online API Key)",
+    "mymemory": "MyMemory (Online, Miễn phí)",
 }
 
-def translate_segments(segments: list[dict], target_lang: str = "vi", engine: str = "google") -> list[dict]:
+def translate_segments(segments: list[dict], target_lang: str = "vi", engine: str = "web_ai_gemini") -> list[dict]:
     """
     Translates transcript segments in-place or returns new list with 'text_original' and translated 'text'.
+    Supports Web AI Zero-Token, VoxDub Cách A batch, Google, DeepL, and LLMs.
     """
+    eng = engine.lower()
+
+    # Web AI Zero-Token / VoxDub Cách A Batch Handler
+    if any(k in eng for k in ("web_ai", "gemini", "chatgpt", "deepseek", "voxdub")):
+        try:
+            from services.web_ai_translator import build_voxdub_prompt, WebAIAutomationEngine
+            prompt = build_voxdub_prompt(segments, target_lang=target_lang, style="cinematic")
+            WebAIAutomationEngine.copy_prompt_to_clipboard(prompt)
+            logger.info("Copied VoxDub prompt to clipboard for Web AI translation.")
+            
+            # If target specified, open the web interface
+            if "chatgpt" in eng:
+                WebAIAutomationEngine.open_web_ai("chatgpt")
+            elif "deepseek" in eng:
+                WebAIAutomationEngine.open_web_ai("deepseek")
+            else:
+                WebAIAutomationEngine.open_web_ai("gemini")
+        except Exception as e:
+            logger.warning(f"Web AI prompt preparation note: {e}")
+
     translated_segments = []
     
     for seg in segments:
