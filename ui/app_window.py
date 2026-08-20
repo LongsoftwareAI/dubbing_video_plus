@@ -117,7 +117,7 @@ class MiniDubberApp:
         self.sub_color_var = tk.StringVar(value="Vàng Điện Ảnh (&H00FFFF)")
         self.sub_size_var = tk.StringVar(value="18pt (Chuẩn)")
         self.sub_pos_var = tk.StringVar(value="Dưới Cùng (Bottom)")
-        self.trans_engine_var = tk.StringVar(value=TRANSLATION_PROVIDERS.get("web_ai_gemini", "🌐 Web AI Gemini (Zero-Token Free)"))
+        self.trans_engine_var = tk.StringVar(value=TRANSLATION_PROVIDERS.get("google", "Google Translate (Online, Nhanh & Ổn định)"))
         self.trans_style_var = tk.StringVar(value="Cinematic (Điện ảnh, tự nhiên)")
         self.trans_quality_var = tk.StringVar(value="cinematic")
         self.output_dir_var = tk.StringVar(value=OUTPUT_DIR)
@@ -1205,7 +1205,7 @@ class MiniDubberApp:
         for k, v in TRANSLATION_PROVIDERS.items():
             if val == v or val == k:
                 return k
-        return "web_ai_gemini"
+        return "google"
 
     def _show_voxdub_translation_assistant(self):
         """Interactive Web AI Zero-Token & VoxDub Cách A Translation Assistant Dialog."""

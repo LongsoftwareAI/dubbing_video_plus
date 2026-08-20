@@ -1,54 +1,170 @@
 # 🎬 Dubbing Video Plus+ — AI Video Dubbing & Studio Suite
 
-**Dubbing Video Plus+** là bộ công cụ desktop lồng tiếng video tự động chuyên nghiệp dành cho Windows, hỗ trợ tăng tốc phần cứng **NVIDIA GPU (CUDA)**, dịch thuật AI đa tầng, tách nhạc nền Demucs, nhân bản giọng nói theo nhân vật (Voice Cloning) và xuất video chất lượng cao.
+<div align="center">
+
+![Dubbing Video Plus+](docs/assets/app_preview.png)
+
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![CUDA](https://img.shields.io/badge/NVIDIA-CUDA%2012.x-green.svg)](https://developer.nvidia.com/cuda-zone)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.x%20Accelerated-orange.svg)](https://pytorch.org/)
+[![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
+[![License](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
+
+*An end-to-end desktop studio for automated AI video dubbing, multi-speaker character voice cloning, high-speed neural speech synthesis, and studio-grade background music preservation.*
+
+</div>
 
 ---
 
-## ✨ Tính Năng Nổi Bật
+## 🌟 Key Features
 
-1. **Tăng Tốc Phần Cứng NVIDIA CUDA:**
-   * Tự động nhận diện và sử dụng card đồ họa **NVIDIA GPU** (RTX / GTX).
-   * Chạy **Faster-Whisper (CTranslate2 float16)** và **Demucs AI** với tốc độ siêu nhanh (nhanh gấp 5-10 lần so với CPU).
+- **🚀 Hardware-Accelerated AI Pipeline (NVIDIA CUDA):**
+  - Instant speech-to-text recognition with **Faster-Whisper (CTranslate2 float16)**.
+  - Studio-grade vocal & background music stem separation powered by **Demucs AI**.
+  - 5x–10x faster rendering speed on modern NVIDIA RTX & GTX GPUs.
 
-2. **Tải & Xử Lý Đa Nền Tảng:**
-   * Tải video tự động từ **YouTube, TikTok, Douyin, Bilibili** hoặc nạp file video từ máy tính.
-   * Tách âm thanh & nhạc nền phòng thu với **Demucs AI**.
-   * Nhận dạng giọng nói siêu nhanh với **Faster-Whisper (CUDA / CPU)**.
+- **🌐 Multi-Engine Fast Translation:**
+  - Fast, reliable online translation with **Google Translate** and **DeepL API**.
+  - Fully offline, private neural translation with **Meta NLLB-200** (200+ languages) and **Argos Translate**.
+  - Optional local/remote LLM support (Ollama, LM Studio, OpenAI-compatible APIs).
 
-3. **Dịch Thuật Thông Minh & Zero-Token Web AI (VoxDub Cách A):**
-   * **VoxDub Cách A:** Trích xuất kịch bản lời thoại chuẩn hóa, tối ưu cho văn phong lồng tiếng điện ảnh tự nhiên.
-   * **Web AI Zero-Token:** Tự động hóa gửi kịch bản lên **Google Gemini Web, ChatGPT, Claude, DeepSeek** không tốn phí API token.
-   * Hỗ trợ Google Translate, DeepL, MyMemory, NLLB-200 và Ollama Local LLM.
+- **🎭 Character-Specific Voice Cloning (Zero-Shot AI):**
+  - Automatically extracts character reference audio directly from video dialogue.
+  - Supports multi-speaker diarization to preserve distinct character voices.
+  - In-app microphone recording suite to build custom voice clone profiles.
 
-4. **Thư Viện Giọng Nói & Nhân Bản Giọng (Voice Clone):**
-   * Tự động trích xuất và nhân bản giọng nhân vật chính từ video gốc.
-   * Phân loại đa nhân vật (Multi-Speaker Diarization).
-   * Thu âm trực tiếp bằng micro trong ứng dụng để tạo giọng clone riêng.
-   * Thư viện hơn 120+ giọng đọc chất lượng cao.
+- **🎙️ Ultra-Natural Neural Text-to-Speech (TTS):**
+  - 120+ natural neural voices across Vietnamese (North/Central/South dialects), English, Japanese, Chinese, and Korean.
+  - Dynamic tempo stretching and duration fitting (`atempo` / `rubberband`) to match speaker lip-sync.
 
-5. **Trình Chỉnh Sửa Kịch Bản (Editor Workbench):**
-   * Nghe thử giọng đọc từng câu.
-   * Gán giọng đọc riêng biệt cho từng nhân vật.
-   * Tự động căn chỉnh tốc độ giọng (Smart Fit / Time Stretch) khớp khẩu hình.
+- **🛠️ Interactive 2-Phase Script Editor (Workbench):**
+  - Live timeline segment review and sentence-by-sentence audio playback.
+  - Assign specific voices and volume gains per dialogue line.
+  - Burn hardcoded subtitles with custom fonts, colors, and background masking.
 
-6. **Dọn Dẹp & Quản Lý Workspace Thông Minh:**
-   * Quản lý toàn bộ video đã xuất và dự án trong thư mục `workspace/`.
-   * Hỗ trợ xóa đơn lẻ, xóa hàng loạt (Multi-Select) và dọn dẹp dung lượng tự động.
+- **🧹 Clean & Modular Workspace Management:**
+  - Automated project directory organization in `workspace/`.
+  - Bulk project selection, batch deletion, and disk space cleaner.
 
 ---
 
-## 🚀 Hướng Dẫn Cài Đặt & Khởi Chạy
+## 🏗️ System Architecture
 
-### 1. Cài đặt thư viện:
+```
+[ Video Input (File / YouTube / TikTok) ]
+                   │
+                   ▼
+       [ Demucs Audio Separation ]
+        ├── Instrumental Music Bed
+        └── Clean Isolated Vocals
+                   │
+                   ▼
+      [ Faster-Whisper ASR (CUDA) ] ───► [ Transcript JSON + Timestamps ]
+                   │
+                   ▼
+   [ Fast Direct Translation Engine ] ──► [ Translated Transcript ]
+                   │
+                   ▼
+ [ Voice Clone / Neural TTS Synthesis ] ──► [ Segmented Audio Clips ]
+                   │
+                   ▼
+    [ Audio Stitching & Lip-Sync Fit ]
+                   │
+                   ▼
+[ Video & Audio Muxing + Subtitle Burn ] ──► [ Final Dubbed Video (MP4) ]
+```
+
+---
+
+## ⚡ Quick Start & Installation
+
+### 1. Prerequisites
+- **OS:** Windows 10 / Windows 11 (64-bit)
+- **Python:** Python 3.10, 3.11, or 3.12
+- **GPU (Recommended):** NVIDIA GPU with CUDA 12.x support (RTX / GTX series)
+- **FFmpeg:** Installed and available in system `PATH` (or placed in project directory).
+
+### 2. Clone the Repository
+```bash
+git clone https://github.com/your-username/dubbing-video-plus.git
+cd dubbing-video-plus
+```
+
+### 3. Create a Virtual Environment & Install Dependencies
 ```powershell
-# Cài đặt PyTorch hỗ trợ GPU CUDA:
+# Create virtual environment
+python -m venv venv
+.\venv\Scripts\activate
+
+# Install PyTorch with CUDA acceleration (for NVIDIA GPUs):
 pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu124
 
-# Cài đặt các thư viện bổ trợ:
+# Install application requirements:
 pip install -r requirements.txt
 ```
 
-### 2. Khởi chạy ứng dụng:
+### 4. Launch the Application
 ```powershell
 python main.py
 ```
+
+---
+
+## 📖 How to Use
+
+1. **Step 1: Input Video**
+   - Paste a video link (YouTube, TikTok, Douyin, Bilibili) or browse a local video file from your computer.
+2. **Step 2: Speech Recognition & Translation**
+   - Select ASR Model (e.g. `large-v3` or `medium` for optimal accuracy).
+   - Select Target Language (e.g. `Tiếng Việt`) and Translation Engine (default: `Google Translate`).
+3. **Step 3: Voice Selection**
+   - Choose a neural voice preset or enable **`✨ Clone Video`** to automatically clone original character voices.
+4. **Step 4: Interactive Review (Phase 1)**
+   - Click **`BẮT ĐẦU DỰ ÁN (BƯỚC 1)`**. The system will download, separate audio, transcribe, and translate.
+   - The interactive **Editor Workbench** opens automatically, allowing you to fine-tune text, adjust timing, and preview voice synthesis.
+5. **Step 5: Render & Export (Phase 2)**
+   - Click **`🎬 XUẤT VIDEO HOÀN TẤT`** to generate the final synchronized dubbed video.
+
+---
+
+## 📁 Project Structure
+
+```
+dubbing_video_plus/
+├── config.py             # Global application configuration & path resolution
+├── main.py               # Application entry point
+├── requirements.txt      # Python package dependencies
+├── README.md             # Project documentation
+├── .gitignore            # Git ignore definitions
+├── core/
+│   ├── dub_engine.py       # 2-Phase dubbing pipeline orchestrator
+│   ├── batch_processor.py  # Multi-video queue processor
+│   ├── model_loader.py     # CUDA hardware & model detection
+│   └── settings_manager.py # Persistent user settings & API keys
+├── services/
+│   ├── asr_service.py         # Faster-Whisper ASR transcription
+│   ├── audio_separator.py     # Demucs audio separation
+│   ├── translation_service.py # Direct multi-engine translation
+│   ├── tts_service.py         # Neural TTS & tempo synchronization
+│   ├── voice_catalog.py       # Voice presets catalog
+│   ├── voice_clone_manager.py # Speaker cloning & profile manager
+│   ├── video_muxer.py         # FFmpeg video/audio mixing & muxing
+│   ├── subtitle_export.py     # SRT/VTT export & ASS burning
+│   └── youtube_downloader.py  # yt-dlp multi-platform downloader
+├── ui/
+│   ├── app_window.py      # Tkinter modern desktop GUI
+│   └── styles.py          # Dark theme design system & widgets
+└── workspace/             # Working directory (cache, outputs, downloads)
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/your-username/dubbing-video-plus/issues).
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

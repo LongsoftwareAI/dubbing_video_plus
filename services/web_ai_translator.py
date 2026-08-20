@@ -435,13 +435,31 @@ class WebAIAutomationEngine:
                             if raw_response: break
                     except Exception: pass
 
-            if not raw_response:
-                raise TimeoutError("Hết thời gian chờ AI phản hồi hoặc chưa nhận được kết quả.")
-
             _log("Đang phân tích và nạp kịch bản vào ứng dụng...")
             parsed = parse_voxdub_llm_response(raw_response, segments)
             _log(f"🎉 Hoàn thành! Đã nạp thành công {len(parsed)} câu thoại dịch vào dự án.")
             return parsed
+
+        except Exception as ex:
+            _log(f"⚠️ Web AI / Chrome Bot gặp sự cố: {ex}. Đang tự động chuyển sang chế độ dự phòng (Google Translate)...")
+            try:
+                from deep_translator import GoogleTranslator
+                translator = GoogleTranslator(source="auto", target=target_lang)
+                fallback_segments = []
+                for s in segments:
+                    ns = dict(s)
+                    orig = s.get("text_original") or s.get("text") or ""
+                    ns["text_original"] = orig
+                    try:
+                        ns["text"] = translator.translate(orig) if orig.strip() else ""
+                    except Exception:
+                        ns["text"] = orig
+                    fallback_segments.append(ns)
+                _log(f"✓ Đã hoàn tất dịch {len(fallback_segments)} câu qua kênh dự phòng Google Translate!")
+                return fallback_segments
+            except Exception as e2:
+                _log(f"Không thể chạy dịch dự phòng: {e2}")
+                raise ex
 
         finally:
             # Leave driver open or quit safely
